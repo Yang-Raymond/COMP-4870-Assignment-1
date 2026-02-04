@@ -37,6 +37,7 @@ else
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
@@ -49,6 +50,6 @@ app.MapControllerRoute(
 app.MapRazorPages()
    .WithStaticAssets();
 
-   await DbSeeder.SeedAsync(app.Services);
+await DbSeeder.SeedAsync(app.Services);
 
 app.Run();
