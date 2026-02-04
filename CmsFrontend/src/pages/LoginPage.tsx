@@ -14,7 +14,7 @@ export default function LoginPage() {
     }
     return (
         <div className="min-h-screen flex items-center justify-center">
-            <div className="w-full max-w-[1040px] rounded-3xl flex flex-col md:flex-row p-6 md:p-0 md:gap-12 border border-gray-200 shadow">
+            <div className="w-full max-w-260 rounded-3xl flex flex-col md:flex-row p-6 md:p-0 md:gap-12 border border-gray-200 shadow">
                 <div className="flex-1 flex flex-col pt-4 md:py-12 md:pl-12">
                     <div className="mb-4 text-4xl">
                         <h1>
