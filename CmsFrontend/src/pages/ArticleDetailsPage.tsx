@@ -39,21 +39,21 @@ export default function ArticleDetailsPage() {
     }, [articleId]);
 
     if (loading) return <p>Loading…</p>;
-    if (error) return <p style={{ color: "crimson" }}>Error: {error}</p>;
+    if (error) return <p className="text-red-600">Error: {error}</p>;
     if (!article) return <p>Article not found.</p>;
 
     return (
         <div>
             <Link to="/articles">← Back to articles</Link>
 
-            <h2 style={{ marginBottom: 6 }}>{article.title}</h2>
-            <div style={{ fontSize: 14, opacity: 0.8, marginBottom: 18 }}>
+            <h2 className="mb-1.5">{article.title}</h2>
+            <div className="text-sm opacity-80 mb-5">
                 By {article.authorName || "unknown"} •{" "}
                 {new Date(article.createdAtUtc).toLocaleString()}
             </div>
 
             <div
-                style={{ lineHeight: 1.6 }}
+                className="leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: article.contentHtml }}
             />
         </div>
