@@ -1,8 +1,10 @@
 import { Link, Outlet } from "react-router-dom";
+import Navbar from "./Navbar";
 
 export default function Layout() {
     return (
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px" }}>
+            <Navbar />
             <header style={{ marginBottom: 24 }}>
                 <h1 style={{ margin: 0 }}>Mini CMS</h1>
                 <p style={{ marginTop: 6, opacity: 0.8 }}>
