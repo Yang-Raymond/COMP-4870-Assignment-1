@@ -59,4 +59,37 @@ public class AuthenticationController : ControllerBase
         await _signInManager.SignOutAsync();
         return Ok();
     }
+
+    [HttpPost("signup")]
+    public async Task<IActionResult> Signup([FromBody] RegisterRequest request)
+    {
+        var user = new IdentityUser { UserName = request.Email, Email = request.Email, EmailConfirmed = true };
+        var result = await _userManager.CreateAsync(user, request.Password);
+
+        if (result.Succeeded)
+        {
+             var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, request.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience: _configuration["JWT:ValidAudience"],
+                expires: DateTime.Now.AddHours(5),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            );
+
+            return Ok(new {
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+                expiration = token.ValidTo
+            });
+        }
+
+        return BadRequest(result.Errors);
+    }
 }
