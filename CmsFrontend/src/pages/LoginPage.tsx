@@ -1,15 +1,30 @@
 import { useState } from "react";
 import { login } from "../api/authenticationApi";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
     const [Email, setEmail] = useState("");
     const [Password, setPassword] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+    const navigate = useNavigate();
+
     const Login = async () => {
         try {
-            await login(Email, Password);
+            setErrorMsg(""); // Reset error state
+            const response = await login(Email, Password);
+
+            // 1. Store the token for future API calls
+            // Assuming your API returns { token: "..." }
+            if (response) {
+                localStorage.setItem("token", response.token);
+            }
+
             console.log("Login successful");
+
+            navigate("/articles");
         } catch (error) {
             console.error("Login failed", error);
+            setErrorMsg("Invalid email or password.");
         }
     }
     return (
@@ -27,25 +42,25 @@ export default function LoginPage() {
                 <div className="flex-1 flex flex-col md:py-12 md:pr-12 max-w-md mx-auto w-full">
                     <div className="mt-8 md:mt-0 space-y-6">
                         <div className="relative">
-                            <input 
-                                type="email" 
-                                id="email" 
-                                className="block px-4 py-3 w-full text-base bg-transparent rounded border border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-[#000000] peer" 
-                                placeholder="Email" 
-                                required 
-                                value={Email} 
-                                onChange={e => setEmail(e.target.value)} 
+                            <input
+                                type="email"
+                                id="email"
+                                className="block px-4 py-3 w-full text-base bg-transparent rounded border border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-[#000000] peer"
+                                placeholder="Email"
+                                required
+                                value={Email}
+                                onChange={e => setEmail(e.target.value)}
                             />
                         </div>
                         <div className="relative">
-                            <input 
-                                type="password" 
-                                id="password" 
-                                className="block px-4 py-3 w-full text-base bg-transparent rounded border border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-[#000000] peer" 
-                                placeholder="Password" 
-                                required 
-                                value={Password} 
-                                onChange={e => setPassword(e.target.value)} 
+                            <input
+                                type="password"
+                                id="password"
+                                className="block px-4 py-3 w-full text-base bg-transparent rounded border border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-[#000000] peer"
+                                placeholder="Password"
+                                required
+                                value={Password}
+                                onChange={e => setPassword(e.target.value)}
                             />
                         </div>
                     </div>
@@ -54,8 +69,8 @@ export default function LoginPage() {
                         <button className="text-[#000000] text-sm font-medium hover:text-[#68686d] hover:bg-white/5 py-2 px-3 rounded transition-colors">
                             Create account
                         </button>
-                        <button 
-                            className="bg-[#a4a5a8] text-[#1f1f1f] text-sm font-medium py-2 px-6 rounded-3xl hover:bg-[#d7d8d8] transition-colors" 
+                        <button
+                            className="bg-[#a4a5a8] text-[#1f1f1f] text-sm font-medium py-2 px-6 rounded-3xl hover:bg-[#d7d8d8] transition-colors"
                             onClick={Login}
                         >
                             Sign in
