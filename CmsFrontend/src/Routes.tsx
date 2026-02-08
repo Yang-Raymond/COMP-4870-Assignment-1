@@ -4,6 +4,8 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import Layout from "./components/Layout";
 import ArticleDetailsPage from "./pages/ArticleDetailsPage";
+import CreateArticlePage from "./pages/CreateArticlePage"; // Import the new page
+import EditArticlePage from "./pages/EditArticlePage";
 
 export const router = createBrowserRouter([
     {
@@ -23,8 +25,18 @@ export const router = createBrowserRouter([
                 element: <LoginPage />,
             },
             {
-                path:"articles/:id",
+                path: "articles/:id",
                 element: <ArticleDetailsPage />,
+            },
+            // Add the Admin Create route here 
+            {
+                path: "admin/create",
+                element: <CreateArticlePage />,
+            },
+
+            {
+                path: "admin/edit/:id",
+                element: <EditArticlePage />,
             }
         ]
     }
