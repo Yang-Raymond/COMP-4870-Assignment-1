@@ -6,6 +6,7 @@ import Layout from "./components/Layout";
 import ArticleDetailsPage from "./pages/ArticleDetailsPage";
 import CreateArticlePage from "./pages/CreateArticlePage"; // Import the new page
 import EditArticlePage from "./pages/EditArticlePage";
+import CreateAccountPage from "./pages/CreateAccountPage";
 
 export const router = createBrowserRouter([
     {
@@ -37,6 +38,11 @@ export const router = createBrowserRouter([
             {
                 path: "admin/edit/:id",
                 element: <EditArticlePage />,
+            },
+
+            {
+                path: "signup",
+                element: <CreateAccountPage />,
             }
         ]
     }

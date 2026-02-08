@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { login } from "../api/authenticationApi";
+import { signup } from "../api/authenticationApi";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function LoginPage() {
+export default function CreateAccountPage() {
     const [Email, setEmail] = useState("");
     const [Password, setPassword] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const navigate = useNavigate();
 
-    const Login = async () => {
+    const CreateAccount = async () => {
         try {
             setErrorMsg(""); // Reset error state
-            const response = await login(Email, Password);
+            const response = await signup(Email, Password);
 
             // 1. Store the token for future API calls
             // Assuming your API returns { token: "..." }
@@ -21,7 +21,7 @@ export default function LoginPage() {
 
             navigate("/articles");
         } catch (error) {
-            console.error("Login failed", error);
+            console.error("Signup failed", error);
             setErrorMsg("Invalid email or password.");
         }
     }
@@ -34,7 +34,7 @@ export default function LoginPage() {
                             Mini-CMS
                         </h1>
                     </div>
-                    <h1 className="text-4xl font-normal mb-2">Sign in</h1>
+                    <h1 className="text-4xl font-normal mb-2">Sign up</h1>
                     <p className="text-xl font-normal">to continue to Mini-CMS</p>
                 </div>
                 <div className="flex-1 flex flex-col md:py-12 md:pr-12 max-w-md mx-auto w-full">
@@ -64,12 +64,14 @@ export default function LoginPage() {
                     </div>
 
                     <div className="flex items-center justify-between mt-12">
-                        <Link to="/signup" className="text-[#000000] text-sm font-medium hover:text-[#68686d] hover:bg-white/5 py-2 px-3 rounded transition-colors">Create account</Link>
+                        <Link to="/login" className="text-[#000000] text-sm font-medium hover:text-[#68686d] hover:bg-white/5 py-2 px-3 rounded transition-colors">
+                            Already have an account?<br/> Login
+                        </Link>
                         <button
                             className="bg-[#a4a5a8] text-[#1f1f1f] text-sm font-medium py-2 px-6 rounded-3xl hover:bg-[#d7d8d8] transition-colors"
-                            onClick={Login}
+                            onClick={CreateAccount}
                         >
-                            Sign in
+                            Sign up
                         </button>
                     </div>
                 </div>
