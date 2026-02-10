@@ -1,81 +1,72 @@
 import { useState } from "react";
-import { signup } from "../api/authenticationApi";
 import { Link, useNavigate } from "react-router-dom";
+import { signup } from "../api/authenticationApi";
 
 export default function CreateAccountPage() {
-    const [Email, setEmail] = useState("");
-    const [Password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const navigate = useNavigate();
 
-    const CreateAccount = async () => {
+    const onSignup = async () => {
         try {
-            setErrorMsg(""); // Reset error state
-            const response = await signup(Email, Password);
-
-            // 1. Store the token for future API calls
-            // Assuming your API returns { token: "..." }
-            if (response) {
-                localStorage.setItem("token", response.token);
-            }
-
+            setErrorMsg("");
+            await signup(email, password); // signup already stores authToken
             navigate("/articles");
-        } catch (error) {
-            console.error("Signup failed", error);
+        } catch (e) {
+            console.error(e);
             setErrorMsg("Invalid email or password.");
         }
-    }
+    };
+
     return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="w-full max-w-260 rounded-3xl flex flex-col md:flex-row p-6 md:p-0 md:gap-12 border border-gray-200 shadow">
-                <div className="flex-1 flex flex-col pt-4 md:py-12 md:pl-12">
-                    <div className="mb-4 text-4xl">
-                        <h1>
-                            Mini-CMS
-                        </h1>
-                    </div>
-                    <h1 className="text-4xl font-normal mb-2">Sign up</h1>
-                    <p className="text-xl font-normal">to continue to Mini-CMS</p>
-                </div>
-                <div className="flex-1 flex flex-col md:py-12 md:pr-12 max-w-md mx-auto w-full">
-                    <div className="mt-8 md:mt-0 space-y-6">
-                        <div className="relative">
-                            <input
-                                type="email"
-                                id="email"
-                                className="block px-4 py-3 w-full text-base bg-transparent rounded border border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-[#000000] peer"
-                                placeholder="Email"
-                                required
-                                value={Email}
-                                onChange={e => setEmail(e.target.value)}
-                            />
-                        </div>
-                        <div className="relative">
-                            <input
-                                type="password"
-                                id="password"
-                                className="block px-4 py-3 w-full text-base bg-transparent rounded border border-gray-500 appearance-none focus:outline-none focus:ring-0 focus:border-[#000000] peer"
-                                placeholder="Password"
-                                required
-                                value={Password}
-                                onChange={e => setPassword(e.target.value)}
-                            />
-                        </div>
+        <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center">
+            <div className="card w-full max-w-4xl overflow-hidden">
+                <div className="grid md:grid-cols-2">
+                    {/* Left */}
+                    <div className="p-10">
+                        <h1 className="text-4xl font-extrabold tracking-tight">Mini-CMS</h1>
+                        <h2 className="mt-3 text-3xl font-semibold">Sign up</h2>
+                        <p className="mt-2 text-[var(--muted)]">to continue to Mini-CMS</p>
+
+                        {errorMsg && (
+                            <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                                {errorMsg}
+                            </div>
+                        )}
                     </div>
 
-                    <div className="flex items-center justify-between mt-12">
-                        <Link to="/login" className="text-[#000000] text-sm font-medium hover:text-[#68686d] hover:bg-white/5 py-2 px-3 rounded transition-colors">
-                            Already have an account?<br/> Login
-                        </Link>
-                        <button
-                            className="bg-[#a4a5a8] text-[#1f1f1f] text-sm font-medium py-2 px-6 rounded-3xl hover:bg-[#d7d8d8] transition-colors"
-                            onClick={CreateAccount}
-                        >
-                            Sign up
-                        </button>
+                    {/* Right */}
+                    <div className="p-10 border-t md:border-t-0 md:border-l border-[var(--border)]">
+                        <div className="space-y-4">
+                            <input
+                                type="email"
+                                className="input focus-ring"
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <input
+                                type="password"
+                                className="input focus-ring"
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="mt-8 flex items-center justify-between">
+                            <Link to="/login" className="link text-sm font-semibold">
+                                Already have an account?
+                            </Link>
+
+                            <button onClick={onSignup} className="btn-primary-sm">
+                                Sign up
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }

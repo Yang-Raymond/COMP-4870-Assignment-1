@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
     const navigate = useNavigate();
@@ -12,36 +12,36 @@ export default function Navbar() {
         navigate("/");
     };
 
+    const linkClass = ({ isActive }: { isActive: boolean }) =>
+        isActive ? "nav-link nav-link-active" : "nav-link";
+
     return (
-        <nav className="flex items-center justify-between px-6 py-3 border-b border-gray-200 font-sans">
-            <div className="flex items-center gap-8">
-                <Link to="/"><h1 className="text-xl text-gray-600 tracking-tight">Mini-CMS</h1></Link>
-                <div className="flex items-center gap-6 text-sm font-medium text-gray-500">
-                    <Link to="/" className="hover:text-black transition-colors">Home</Link>
-                    <Link to="/articles" className="hover:text-black transition-colors">Articles</Link>
-                    
-                    {/* Only display 'Create' after logging in [cite: 54] */}
+        <nav className="sticky top-0 z-50 bg-[var(--brand-cream)]/90 backdrop-blur border-b border-[var(--border)]">
+            <div className="max-w-5xl mx-auto flex items-center justify-between px-5 py-4">
+                <Link to="/" className="flex items-center gap-2">
+                    <h1 className="text-xl text-[var(--text)] tracking-tight">Mini-CMS</h1>
+                </Link>
+
+                <div className="flex items-center gap-6 text-sm font-medium text-[var(--muted)]">
+                    <NavLink to="/" className={linkClass}>Home</NavLink>
+                    <NavLink to="/articles" className={linkClass}>Articles</NavLink>
+
                     {isAuthenticated && (
-                        <Link to="/admin/create" className="hover:text-black transition-colors text-blue-600">
+                        <NavLink to="/admin/create" className={linkClass}>
                             Create Article
+                        </NavLink>
+                    )}
+
+                    {isAuthenticated ? (
+                        <button onClick={handleLogout} className="nav-link">
+                            Logout
+                        </button>
+                    ) : (
+                        <Link to="/login" className="text-sm font-medium text-[var(--muted)] hover:text-[var(--text)] ml-2">
+                            Login
                         </Link>
                     )}
                 </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-                {isAuthenticated ? (
-                    <button 
-                        onClick={handleLogout}
-                        className="text-sm font-medium text-gray-600 hover:text-black ml-2"
-                    >
-                        Logout
-                    </button>
-                ) : (
-                    <Link to="/login" className="text-sm font-medium text-gray-600 hover:text-black ml-2">
-                        Login
-                    </Link>
-                )}
             </div>
         </nav>
     );

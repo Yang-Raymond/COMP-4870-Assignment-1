@@ -42,36 +42,56 @@ export default function ArticlesListPage() {
     if (error) return <p className="text-red-600">Error: {error}</p>;
 
     return (
-        <div>
-            <h2 className="mt-0">Articles</h2>
+        <div className="space-y-6">
+            <div className="card card-pad">
+                <div className="flex items-end justify-between gap-4">
+                    <div>
+                        <h2 className="text-2xl font-extrabold tracking-tight m-0">Articles</h2>
+                        <p className="mt-1 text-slate-600">
+                            Browse posts fetched from the ASP.NET REST API.
+                        </p>
+                    </div>
+                    <div className="badge">
+                        {filtered.length} shown
+                    </div>
+                </div>
 
-            <div className="mb-4">
-                <input
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search by title/author…"
-                    className="w-full p-2.5 border border-gray-300 rounded"
-                />
+                <div className="mt-5">
+                    <input
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Search by title/author…"
+                        className="input"
+                    />
+                </div>
             </div>
 
             {filtered.length === 0 ? (
-                <p>No articles found.</p>
+                <div className="card card-pad">
+                    No articles found.
+                </div>
             ) : (
-                <ul className="list-none p-0 m-0">
+                <div className="grid gap-4">
                     {filtered.map((a) => (
-                        <li
-                            key={a.id}
-                            className="border border-gray-300 p-4 rounded-lg mb-3"
-                        >
-                            <h3 className="mt-0 mb-1.5">{a.title}</h3>
-                            <div className="text-sm opacity-80 mb-2.5">
-                                By {a.authorName || "unknown"} •{" "}
-                                {new Date(a.createdAtUtc).toLocaleString()}
+                        <div key={a.id} className="card card-pad">
+                            <div className="flex items-start justify-between gap-4">
+                                <div>
+                                    <h3 className="text-lg font-extrabold m-0">{a.title}</h3>
+                                    <div className="mt-2 text-sm text-slate-600">
+                                        By <span className="font-semibold text-slate-800">{a.authorName || "unknown"}</span> •{" "}
+                                        {new Date(a.createdAtUtc).toLocaleString()}
+                                    </div>
+                                </div>
+                                <Link
+                                    to={`/articles/${a.id}`}
+                                    className="btn-primary-sm"
+                                >
+                                    Read →
+                                </Link>
                             </div>
-                            <Link to={`/articles/${a.id}`}>Read →</Link>
-                        </li>
+                        </div>
                     ))}
-                </ul>
+                </div>
             )}
         </div>
     );

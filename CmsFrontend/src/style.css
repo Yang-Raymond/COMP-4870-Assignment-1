@@ -1,1 +1,171 @@
 @import "tailwindcss";
+
+/* Brand theme */
+:root {
+    --brand-pink: #bcadfb;
+    /* primary */
+    --brand-cream: #FFFCF9;
+    /* surface tint */
+    --brand-aqua: #B1EDE8;
+    /* highlight */
+
+    --text: #0f172a;
+    --muted: #64748b;
+
+    --border: #e2e8f0;
+    --card: #ffffff;
+    --bg: #F8FAFC;
+
+    /* focus ring */
+    --ring: rgba(177, 237, 232, 0.65);
+}
+
+/* Global */
+html,
+body {
+    height: 100%;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+a {
+    color: inherit;
+}
+
+a:hover {
+    opacity: 0.95;
+}
+
+.link {
+    color: var(--brand-pink);
+    font-weight: 600;
+}
+
+.link:hover {
+    filter: brightness(0.95);
+}
+
+/* Reusable UI building blocks */
+@layer components {
+    .card {
+        @apply rounded-3xl border shadow-sm;
+        border-color: var(--border);
+        background: var(--card);
+    }
+
+    .card-pad {
+        @apply p-6;
+    }
+
+    .card-pad-lg {
+        @apply p-10;
+    }
+
+    /* Buttons */
+    .btn-primary {
+        @apply inline-flex items-center justify-center font-semibold transition select-none rounded-xl px-5 py-3;
+        background: var(--brand-pink);
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        filter: brightness(0.95);
+    }
+
+    .btn-primary-sm {
+        @apply inline-flex items-center justify-center font-semibold transition select-none rounded-xl px-4 py-2 text-sm;
+        background: var(--brand-pink);
+        color: #fff;
+    }
+
+    .btn-primary-sm:hover {
+        filter: brightness(0.95);
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center font-semibold transition select-none rounded-xl px-5 py-3 border;
+        border-color: var(--brand-aqua);
+        background: var(--brand-cream);
+        color: var(--text);
+    }
+
+    .btn-secondary:hover {
+        filter: brightness(0.98);
+    }
+
+    .btn-ghost {
+        @apply inline-flex items-center justify-center font-semibold transition select-none rounded-xl px-4 py-2 border text-sm;
+        border-color: var(--border);
+        background: #fff;
+        color: var(--text);
+    }
+
+    .btn-ghost:hover {
+        background: rgba(15, 23, 42, 0.04);
+    }
+
+    .input {
+        @apply w-full rounded-xl px-4 py-3 outline-none border bg-white;
+        border-color: var(--border);
+    }
+
+    .input:focus {
+        box-shadow: 0 0 0 4px var(--ring);
+        border-color: var(--brand-pink);
+    }
+
+    .badge {
+        @apply rounded-full px-3 py-1 text-sm font-semibold border;
+        border-color: var(--brand-aqua);
+        background: var(--brand-cream);
+        color: var(--text);
+    }
+
+    /* Navbar helpers */
+    .nav-link {
+        @apply text-sm font-medium transition-colors;
+        color: var(--muted);
+    }
+
+    .nav-link:hover {
+        color: var(--text);
+    }
+
+    .nav-link-active {
+        color: var(--brand-pink);
+        font-weight: 700;
+    }
+}
+
+/* Quill styling */
+.ql-toolbar.ql-snow {
+    border: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    background: var(--brand-cream);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.ql-container.ql-snow {
+    border: none !important;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+.ql-editor {
+    min-height: 260px;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.rich-text-content a {
+    color: var(--brand-pink);
+    font-weight: 600;
+}
+
+.rich-text-content a:hover {
+    filter: brightness(0.95);
+}
