@@ -7,6 +7,7 @@ import ArticleDetailsPage from "./pages/ArticleDetailsPage";
 import CreateArticlePage from "./pages/CreateArticlePage"; // Import the new page
 import EditArticlePage from "./pages/EditArticlePage";
 import CreateAccountPage from "./pages/CreateAccountPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export const router = createBrowserRouter([
     {
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
             {
                 path: "signup",
                 element: <CreateAccountPage />,
+            },
+            {
+                path: "*",
+                element: <NotFoundPage />,
             }
         ]
     }

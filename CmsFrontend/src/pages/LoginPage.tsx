@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../api/authenticationApi";
 
@@ -8,12 +8,20 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
+  //Checks if the user is already logged in
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      navigate("/");
+    }
+  }, []);
+
   const onLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setErrorMsg("");
       await login(email, password); // auth API stores authToken
-      navigate("/articles");
+      navigate("/");
     } catch (e) {
       console.error(e);
       setErrorMsg("Invalid email or password.");

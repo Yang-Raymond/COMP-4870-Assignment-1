@@ -48,3 +48,17 @@ export async function signup(email: string, username: string, password: string):
     }
     return data;
 }
+
+//Logout function
+export async function logout(): Promise<any> {
+    //Fetch the logout API
+    const res = await fetch("/api/authentication/logout", {
+        method: "POST",
+    });
+    if (!res.ok) {
+        throw new Error("Logout failed");
+    }
+    //Clear the token and username from local storage
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("username");
+}

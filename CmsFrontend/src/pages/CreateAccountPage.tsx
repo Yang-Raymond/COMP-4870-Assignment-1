@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../api/authenticationApi";
 
@@ -9,12 +9,20 @@ export default function CreateAccountPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
+  //Checks if the user is already logged in
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      navigate("/");
+    }
+  }, []);
+
   const onSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setErrorMsg("");
       await signup(email, username, password); // signup already stores authToken
-      navigate("/articles");
+      navigate("/");
     } catch (e) {
       console.error(e);
       setErrorMsg("Invalid email or password.");
