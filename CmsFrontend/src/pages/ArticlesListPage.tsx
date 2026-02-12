@@ -79,7 +79,7 @@ export default function ArticlesListPage() {
                                     <h3 className="text-lg font-extrabold m-0">{a.title}</h3>
                                     <div className="mt-2 text-sm text-slate-600">
                                         By <span className="font-semibold text-slate-800">{a.authorName || "unknown"}</span> •{" "}
-                                        {new Date(a.createdAtUtc).toLocaleString()}
+                                        {new Date(a.createdAtUtc + "Z").toLocaleString()}
                                     </div>
                                 </div>
                                 <Link

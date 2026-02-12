@@ -153,7 +153,7 @@ export default function HomePage() {
                         recent.map((a) => {
                             const plain = stripHtml(a.contentHtml ?? "");
                             const short = excerpt(plain, 150);
-                            const date = new Date(a.createdAtUtc).toLocaleString(undefined, {
+                            const date = new Date(a.createdAtUtc + "Z").toLocaleString(undefined, {
                                 year: "numeric",
                                 month: "short",
                                 day: "numeric",
