@@ -11,6 +11,7 @@ public static class DbSeeder
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
+        var adminUserName = "admin";
         var adminEmail = "a@a.a";
         var adminPassword = "P@$$w0rd";
 
@@ -19,7 +20,7 @@ public static class DbSeeder
         {
             admin = new IdentityUser
             {
-                UserName = adminEmail,
+                UserName = adminUserName,
                 Email = adminEmail,
                 EmailConfirmed = true,
             };
