@@ -61,7 +61,7 @@ export default function HomePage() {
                 <div className="p-10 md:p-12">
                     <h1 className="text-5xl font-extrabold tracking-tight">Mini-CMS</h1>
 
-                    <p className="mt-4 text-lg leading-8 text-[var(--muted)] max-w-3xl">
+                    <p className="mt-4 text-lg leading-8 text-(--muted) max-w-3xl">
                         A simple content platform built with ASP.NET + SQLite + React. Browse articles, view rich text content,
                         and manage posts through the admin area.
                     </p>
