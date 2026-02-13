@@ -1,8 +1,5 @@
 import type { Article } from "../types/Article";
 
-
-const BASE_URL = "/api/articles";
-
 export async function getArticles(): Promise<Article[]> {
     const res = await fetch("/api/articles");
     if (!res.ok) throw new Error(`Failed to fetch articles (${res.status})`);

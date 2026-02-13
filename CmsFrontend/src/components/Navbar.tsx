@@ -21,6 +21,8 @@ export default function Navbar() {
           <Link
             to="http://localhost:5002/Identity/Account/Login"
             className="text-sm font-medium text-(--muted) hover:text-(--text) ml-2"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             Login
           </Link>
