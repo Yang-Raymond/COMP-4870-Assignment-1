@@ -1,16 +1,6 @@
-import { NavLink, Link, useNavigate } from "react-router-dom";
-import { logout } from "../api/authenticationApi";
+import { NavLink, Link } from "react-router-dom";
 
 export default function Navbar() {
-  const navigate = useNavigate();
-  // Check if the user is authenticated based on the token you store during login
-  var isAuthenticated = !!localStorage.getItem("authToken");
-
-  const handleLogout = async () => {
-    await logout();
-    navigate("/");
-  };
-
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     isActive ? "nav-link nav-link-active" : "nav-link";
 
