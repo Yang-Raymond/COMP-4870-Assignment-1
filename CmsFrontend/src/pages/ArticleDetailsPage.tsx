@@ -61,13 +61,6 @@ export default function ArticleDetailsPage() {
         >
           ← Back to articles
         </Link>
-
-        {/* Conditional Edit Button for Admins  */}
-        {isAuthenticated && (
-          <Link to={`/admin/edit/${article.id}`} className="btn-ghost">
-            Edit Article
-          </Link>
-        )}
       </div>
 
       <header className="mb-10 border-b border-(--border) pb-8">
