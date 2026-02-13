@@ -1,12 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import ArticlesListPage from "./pages/ArticlesListPage";
-import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import Layout from "./components/Layout";
 import ArticleDetailsPage from "./pages/ArticleDetailsPage";
 import CreateArticlePage from "./pages/CreateArticlePage"; // Import the new page
 import EditArticlePage from "./pages/EditArticlePage";
-import CreateAccountPage from "./pages/CreateAccountPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 export const router = createBrowserRouter([
@@ -23,10 +21,6 @@ export const router = createBrowserRouter([
                 element: <ArticlesListPage />,
             },
             {
-                path: "login",
-                element: <LoginPage />,
-            },
-            {
                 path: "articles/:id",
                 element: <ArticleDetailsPage />,
             },
@@ -39,11 +33,6 @@ export const router = createBrowserRouter([
             {
                 path: "admin/edit/:id",
                 element: <EditArticlePage />,
-            },
-
-            {
-                path: "signup",
-                element: <CreateAccountPage />,
             },
             {
                 path: "*",

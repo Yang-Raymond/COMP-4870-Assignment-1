@@ -26,26 +26,14 @@
 
                 <div class="collapse navbar-collapse" id="mainNav">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="AdminArticles" asp-action="Index">Manage
-                                Articles</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="AdminArticles" asp-action="Create">Create
-                                    Article</a>
-                                </li>
-                            </ul>
-
-                            <div class="d-flex align-items-center gap-2">
-                                <partial name="_LoginPartial" />
-                            </div>
-                        </div>
+                    </ul>
+                    <div class="d-flex align-items-center gap-2">
+                        <partial name="_LoginPartial" />
                     </div>
-                </nav>
-            </header>
+                </div>
+            </div>
+        </nav>
+    </header>
 
             <div class="container admin-shell">
                 <main role="main">

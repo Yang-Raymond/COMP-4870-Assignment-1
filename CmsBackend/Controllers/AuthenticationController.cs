@@ -48,7 +48,7 @@ public class AuthenticationController : ControllerBase
             lockoutOnFailure: false
         );
 
-        //If the user is signed in, create a JWT token
+        //If the user is signed in
         if (result.Succeeded)
         {
             var authClaims = new List<Claim>

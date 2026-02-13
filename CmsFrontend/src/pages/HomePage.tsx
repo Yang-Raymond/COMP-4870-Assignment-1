@@ -71,7 +71,7 @@ export default function HomePage() {
                             Browse Articles →
                         </Link>
 
-                        <Link to="/login" className="btn-secondary">
+                        <Link to="http://localhost:5002/Identity/Account/Login" className="btn-secondary">
                             Admin Login
                         </Link>
                     </div>

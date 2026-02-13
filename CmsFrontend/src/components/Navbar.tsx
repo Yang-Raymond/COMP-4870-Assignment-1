@@ -28,25 +28,12 @@ export default function Navbar() {
           <NavLink to="/articles" className={linkClass}>
             Articles
           </NavLink>
-
-          {isAuthenticated && (
-            <NavLink to="/admin/create" className={linkClass}>
-              Create Article
-            </NavLink>
-          )}
-
-          {isAuthenticated ? (
-            <button onClick={handleLogout} className="nav-link">
-              Logout
-            </button>
-          ) : (
-            <Link
-              to="/login"
-              className="text-sm font-medium text-(--muted) hover:text-(--text) ml-2"
-            >
-              Login
-            </Link>
-          )}
+          <Link
+            to="http://localhost:5002/Identity/Account/Login"
+            className="text-sm font-medium text-(--muted) hover:text-(--text) ml-2"
+          >
+            Login
+          </Link>
         </div>
       </div>
     </nav>
