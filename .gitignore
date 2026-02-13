@@ -508,3 +508,4 @@ dist-ssr
 
 #Secret files
 appsettings.json
+CmsBackend/cms.sqlite
