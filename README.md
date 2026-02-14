@@ -39,6 +39,9 @@ This runs:
 - Backend: `http://localhost:5002`
 - Frontend: `http://localhost:5173`
 
+## Database Seeding
+On startup, DbSeeder.cs automatically creates the default admin account below.
+
 ## Admin Login
 Open:
 - `http://localhost:5002/admin/articles`

@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace CmsBackend.Controllers;
 
-//Authentication controller for handling login, logout and signup
+// Handles user authentication including login, logout, and signup with JWT token generation.
 [ApiController]
 [Route("api/[controller]")]
 public class AuthenticationController : ControllerBase
@@ -29,18 +29,18 @@ public class AuthenticationController : ControllerBase
         _configuration = configuration;
     }
 
-    //Login function
+    // Authenticate user and return JWT token if credentials are valid.
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        //Find the user by email
+        // Return unauthorized if user with email doesn't exist.
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
         {
             return Unauthorized();
         }
 
-        //Sign in the user
+        // Attempt to sign in with provided credentials.
         var result = await _signInManager.PasswordSignInAsync(
             user.UserName!,
             request.Password,
@@ -48,7 +48,7 @@ public class AuthenticationController : ControllerBase
             lockoutOnFailure: false
         );
 
-        //If the user is signed in
+        // Generate JWT token on successful authentication.
         if (result.Succeeded)
         {
             var authClaims = new List<Claim>
@@ -72,7 +72,7 @@ public class AuthenticationController : ControllerBase
                 )
             );
 
-            //Return the token and username
+            // Return JWT token with expiration and username.
             return Ok(
                 new
                 {
@@ -85,7 +85,7 @@ public class AuthenticationController : ControllerBase
         return Unauthorized();
     }
 
-    //Logout function
+    // Sign out the current user and clear authentication.
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
@@ -93,11 +93,11 @@ public class AuthenticationController : ControllerBase
         return Ok();
     }
 
-    //Signup function
+    // Register a new user and return JWT token on successful creation.
     [HttpPost("signup")]
     public async Task<IActionResult> Signup([FromBody] SignUp request)
     {
-        //Create a new user using provided email, username and password
+        // Create new identity user with provided credentials.
         var user = new IdentityUser
         {
             UserName = request.Username,
@@ -106,7 +106,7 @@ public class AuthenticationController : ControllerBase
         };
         var result = await _userManager.CreateAsync(user, request.Password);
 
-        //If the user is created successfully, create a JWT token
+        // Generate JWT token on successful user creation.
         if (result.Succeeded)
         {
             var authClaims = new List<Claim>
@@ -130,7 +130,7 @@ public class AuthenticationController : ControllerBase
                 )
             );
 
-            //Return the token and username
+            // Return JWT token with expiration and username.
             return Ok(
                 new
                 {

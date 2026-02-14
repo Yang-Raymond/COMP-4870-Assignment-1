@@ -3,7 +3,9 @@ import { Link, useParams } from "react-router-dom";
 import { getArticle } from "../api/articlesApi";
 import type { Article } from "../types/Article";
 
+// Displays individual article details with metadata and rich text content.
 export default function ArticleDetailsPage() {
+  // Extract and parse the article ID from the URL parameter.
   const { id } = useParams();
   const articleId = Number(id);
 
@@ -11,13 +13,15 @@ export default function ArticleDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Check authentication status to show/hide Admin features
+  // Check if user is authenticated by looking for stored auth token.
   const isAuthenticated = !!localStorage.getItem("authToken");
 
+  // Fetch article data when component mounts or article ID changes.
   useEffect(() => {
     let isMounted = true;
 
     (async () => {
+      // Validate that a valid numeric article ID was provided.
       if (!Number.isFinite(articleId)) {
         setError("Invalid article id");
         setLoading(false);
@@ -41,12 +45,15 @@ export default function ArticleDetailsPage() {
     };
   }, [articleId]);
 
+  // Show loading state while fetching article data.
   if (loading)
     return (
       <div className="p-8 text-center text-gray-500">Loading article...</div>
     );
+  // Show error message if fetch failed.
   if (error)
     return <div className="p-8 text-center text-red-600">Error: {error}</div>;
+  // Show not found message if article doesn't exist.
   if (!article)
     return (
       <div className="p-8 text-center text-gray-500">Article not found.</div>
