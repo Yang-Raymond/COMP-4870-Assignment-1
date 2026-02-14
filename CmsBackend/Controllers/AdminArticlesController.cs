@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CmsBackend.Controllers;
 
+// Handles admin CRUD operations for articles with role-based authorization.
 [Authorize]
 [Route("admin")]
 public class AdminArticlesController : Controller
@@ -14,7 +15,7 @@ public class AdminArticlesController : Controller
 
     public AdminArticlesController(ApplicationDbContext db) => _db = db;
 
-    // GET: admin/ - List all articles
+    // Fetch and display all articles sorted by most recent first.
     [HttpGet("")]
     [HttpGet("articles")]
     public async Task<IActionResult> Index()
@@ -23,17 +24,18 @@ public class AdminArticlesController : Controller
         return View(articles);
     }
 
-    // GET: admin/create - Show create form
+    // Display the article creation form.
     [HttpGet("create")]
     public IActionResult Create()
     {
         return View();
     }
 
-    // POST: admin/create - Create new article
+    // Create a new article and save to database.
     [HttpPost("create")]
     public async Task<IActionResult> Create(Article article)
     {
+        // Return form if validation fails.
         if (!ModelState.IsValid)
             return View(article);
 
@@ -48,28 +50,32 @@ public class AdminArticlesController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // GET: admin/edit/{id} - Show edit form
+    // Display the article edit form.
     [HttpGet("edit/{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
         var article = await _db.Articles.FindAsync(id);
+        // Return 404 if article doesn't exist.
         if (article is null)
             return NotFound();
 
         return View(article);
     }
 
-    // POST: admin/edit/{id} - Update article
+    // Update an existing article with new data.
     [HttpPost("edit/{id:int}")]
     public async Task<IActionResult> Edit(int id, Article article)
     {
+        // Verify the ID matches the article being updated.
         if (id != article.Id)
             return BadRequest();
 
+        // Return form if validation fails.
         if (!ModelState.IsValid)
             return View(article);
 
         var existing = await _db.Articles.FindAsync(id);
+        // Return 404 if article doesn't exist.
         if (existing is null)
             return NotFound();
 
@@ -83,11 +89,12 @@ public class AdminArticlesController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // POST: admin/delete/{id} - Delete article
+    // Delete an article from the database.
     [HttpPost("delete/{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
         var article = await _db.Articles.FindAsync(id);
+        // Return 404 if article doesn't exist.
         if (article is null)
             return NotFound();
 
