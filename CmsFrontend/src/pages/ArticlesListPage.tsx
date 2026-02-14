@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import { getArticles } from "../api/articlesApi";
 import type { Article } from "../types/Article";
 
+// Displays a searchable list of all articles with title and author filtering.
 export default function ArticlesListPage() {
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [query, setQuery] = useState("");
 
+    // Fetch all articles when component mounts.
     useEffect(() => {
         let isMounted = true;
 
@@ -30,6 +32,7 @@ export default function ArticlesListPage() {
         };
     }, []);
 
+    // Filter articles by search query on title and author name.
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase();
         if (!q) return articles;
@@ -38,7 +41,9 @@ export default function ArticlesListPage() {
         );
     }, [articles, query]);
 
+    // Show loading state while fetching articles.
     if (loading) return <p>Loading articles…</p>;
+    // Show error message if fetch failed.
     if (error) return <p className="text-red-600">Error: {error}</p>;
 
     return (
@@ -66,6 +71,7 @@ export default function ArticlesListPage() {
                 </div>
             </div>
 
+            {/* Show empty state when no articles match the search query. */}
             {filtered.length === 0 ? (
                 <div className="card card-pad">
                     No articles found.

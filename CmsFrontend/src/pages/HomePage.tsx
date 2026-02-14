@@ -3,22 +3,26 @@ import { Link } from "react-router-dom";
 import type { Article } from "../types/Article";
 import { getArticles } from "../api/articlesApi";
 
+// Remove HTML tags from string for plain text display.
 function stripHtml(html: string) {
   if (!html) return "";
   const doc = new DOMParser().parseFromString(html, "text/html");
   return (doc.body.textContent || "").trim();
 }
 
+// Truncate text to max length and append ellipsis if necessary.
 function excerpt(text: string, max = 140) {
   if (!text) return "";
   return text.length > max ? text.slice(0, max).trimEnd() + "…" : text;
 }
 
+// Displays homepage with hero section and 3 most recent articles.
 export default function HomePage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
+  // Fetch all articles when component mounts.
   useEffect(() => {
     let mounted = true;
 
@@ -45,6 +49,7 @@ export default function HomePage() {
     };
   }, []);
 
+  // Sort articles by date and return the 3 most recent.
   const recent = useMemo(() => {
     return [...articles]
       .sort(
@@ -98,6 +103,7 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* Display error message if fetch failed. */}
         {errorMsg && (
           <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {errorMsg}
@@ -105,6 +111,7 @@ export default function HomePage() {
         )}
 
         <div className="grid-3 recent-grid">
+          {/* Show skeleton loaders while fetching articles. */}
           {loading &&
             [0, 1, 2].map((i) => (
               <div key={i} className="card p-6">
@@ -160,6 +167,7 @@ export default function HomePage() {
               </div>
             ))}
 
+          {/* Display article cards once loaded. */}
           {!loading &&
             recent.map((a) => {
               const plain = stripHtml(a.contentHtml ?? "");
@@ -202,6 +210,7 @@ export default function HomePage() {
               );
             })}
 
+          {/* Show empty state if no articles exist. */}
           {!loading && recent.length === 0 && !errorMsg && (
             <div className="card p-6" style={{ gridColumn: "1 / -1" }}>
               <h3 style={{ margin: 0, fontSize: 18 }}>No articles yet</h3>

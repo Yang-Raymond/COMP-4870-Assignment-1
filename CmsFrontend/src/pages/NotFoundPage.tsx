@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+// Displays 404 error page with decorative graphics and link to home.
 export default function NotFoundPage() {
   return (
     <div className="min-h-[calc(100vh-6rem)] relative flex flex-col items-center justify-start overflow-hidden pt-20">
