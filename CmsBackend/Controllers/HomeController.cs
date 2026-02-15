@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using CmsBackend.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CmsBackend.Controllers;
 
@@ -13,16 +13,19 @@ public class HomeController : Controller
         return View();
     }
 
-    // Display the privacy policy page.
-    public IActionResult Privacy()
+    // Display 404 page for unmatched routes.
+    public IActionResult NotFound404()
     {
-        return View();
+        Response.StatusCode = 404;
+        return View("NotFound");
     }
 
     // Display error page with request tracking information.
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View(
+            new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }
+        );
     }
 }

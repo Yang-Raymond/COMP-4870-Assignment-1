@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create Article";
+    Layout = "_Layout";
 }
 
 <div class="container mt-4">
@@ -11,7 +12,6 @@
             <hr />
 
             <form method="post" asp-action="Create" asp-controller="AdminArticles">
-                @* Hidden fields for required model data that isn't in the UI *@
                 <input type="hidden" asp-for="AuthorName" value="admin" />
                 
                 <div class="form-group mb-3">

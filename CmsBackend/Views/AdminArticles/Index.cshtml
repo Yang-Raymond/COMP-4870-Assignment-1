@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Manage Articles";
+    Layout = "_Layout";
 }
 
 <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
@@ -10,6 +11,10 @@
 <script>
     tailwind.config = {
         darkMode: "class",
+        important: '.admin-articles-page',
+        corePlugins: {
+            preflight: false,
+        },
         theme: {
             extend: {
                 colors: {
@@ -50,7 +55,7 @@
 </style>
 
 <div class="admin-articles-page" style="font-family: 'Inter', sans-serif;">
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-6">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-6">
 
         <!-- Main Card -->
         <div class="bg-card-light dark:bg-card-dark rounded-xl border border-border-light dark:border-border-dark p-6 md:p-8 shadow-soft transition-colors duration-200">
@@ -117,7 +122,7 @@
                             <div class="text-sm text-text-muted-light dark:text-text-muted-dark flex flex-wrap items-center gap-x-2">
                                 <span class="font-medium text-text-main-light dark:text-text-main-dark">By @article.AuthorName</span>
                                 <span class="text-xs">•</span>
-                                <span>@article.CreatedAtUtc.ToString("yyyy-MM-dd, h:mm:ss tt")</span>
+                                <span>@article.CreatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd, h:mm tt")</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0">
@@ -137,7 +142,7 @@
                 }
             </div>
         }
-    </main>
+    </div>
 </div>
 
 @section Scripts {

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit Article";
+    Layout = "_Layout";
 }
 
 <div class="container mt-4">
@@ -11,9 +12,7 @@
             <hr />
 
             <form method="post" asp-action="Edit" asp-controller="AdminArticles" asp-route-id="@Model.Id">
-                @* Required for EF to know which record to update *@
                 <input type="hidden" asp-for="Id" />
-                @* Keep the original author and creation date *@
                 <input type="hidden" asp-for="AuthorName" />
                 <input type="hidden" asp-for="CreatedAtUtc" />
 

@@ -13,9 +13,6 @@ export default function ArticleDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Check if user is authenticated by looking for stored auth token.
-  const isAuthenticated = !!localStorage.getItem("authToken");
-
   // Fetch article data when component mounts or article ID changes.
   useEffect(() => {
     let isMounted = true;
