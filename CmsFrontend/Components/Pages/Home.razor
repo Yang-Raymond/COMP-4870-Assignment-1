@@ -1,0 +1,115 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@inject IHttpClientFactory HttpClientFactory
+
+<PageTitle>Mini-CMS</PageTitle>
+
+<div class="container">
+    @* Box *@
+    <section class="card w-full max-w-5xl mx-auto">
+        <div class="p-10">
+            <h1 class="text-5xl font-extrabold tracking-tight">Mini-CMS</h1>
+
+            <p class="mt-4 text-lg leading-8 text-muted max-w-3xl">
+                A simple content platform built with ASP.NET + SQLite + Blazor.
+                Browse articles, view rich text content, and manage posts through
+                the admin area.
+            </p>
+
+            <div class="mt-6 flex gap-3">
+                <a href="/articles" class="btn-primary">Browse Articles →</a>
+                <a href="http://localhost:5002/Identity/Account/Login"
+                   target="_blank" rel="noopener noreferrer"
+                   class="btn-secondary">Admin Login</a>
+            </div>
+        </div>
+    </section>
+
+    @* Recent Articles *@
+    <div class="mt-12">
+        <div class="section-header">
+            <div>
+                <h2 class="text-2xl font-extrabold tracking-tight">Recent Articles</h2>
+                <p class="section-subtext">The latest posts added to Mini-CMS.</p>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMsg))
+        {
+            <div class="error-box mt-6">@errorMsg</div>
+        }
+
+        <div class="grid-3">
+            @if (loading)
+            {
+                @for (int i = 0; i < 3; i++)
+                {
+                    <div class="card p-6">
+                        <div class="skeleton-bar" style="height:18px;width:65%;opacity:.6;margin-bottom:14px"></div>
+                        <div class="skeleton-bar" style="height:12px;width:45%;opacity:.5;margin-bottom:16px"></div>
+                        <div class="skeleton-bar" style="height:12px;width:100%;opacity:.4;margin-bottom:10px"></div>
+                        <div class="skeleton-bar" style="height:12px;width:92%;opacity:.4;margin-bottom:10px"></div>
+                        <div class="skeleton-bar" style="height:12px;width:80%;opacity:.4"></div>
+                    </div>
+                }
+            }
+            else if (recent.Count == 0 && string.IsNullOrEmpty(errorMsg))
+            {
+                <div class="card p-6" style="grid-column:1/-1">
+                    <h3 style="margin:0;font-size:18px">No articles yet</h3>
+                    <p style="margin-top:6px;color:var(--muted)">
+                        Create your first article to have it appear here.
+                    </p>
+                    <a href="/articles" class="btn-primary" style="margin-top:12px">Browse Articles</a>
+                </div>
+            }
+            else
+            {
+                @foreach (var article in recent)
+                {
+                    <ArticleCard Article="article" />
+                }
+            }
+        </div>
+
+        @* Footer *@
+        <div class="recent-decor" aria-hidden="true">
+            <img class="recent-mountains" src="/images/mountains.png" alt="" />
+            <img class="recent-penguin" src="/images/penguin.png" alt="" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<BlazorFrontEnd.Models.Article> articles = new();
+    private List<BlazorFrontEnd.Models.Article> recent = new();
+    private bool loading = true;
+    private string errorMsg = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var client = HttpClientFactory.CreateClient("CmsApi");
+            var data = await client.GetFromJsonAsync<List<BlazorFrontEnd.Models.Article>>("/api/articles");
+
+            if (data is not null)
+            {
+                articles = data;
+                recent = articles
+                    .OrderByDescending(a => a.CreatedAtUtc)
+                    .Take(3)
+                    .ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex);
+            errorMsg = "Could not load recent articles.";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}

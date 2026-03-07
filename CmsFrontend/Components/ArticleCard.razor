@@ -1,0 +1,43 @@
+@* Reusable article preview card – used on Home and Articles pages *@
+
+<a class="article-card" href="articles/@Article.Id">
+    <div class="article-top">
+        <div class="article-badge">New</div>
+        <div class="article-meta">
+            <span>By @Article.AuthorName</span>
+            <span>•</span>
+            <span>@Article.CreatedAtUtc.ToString("MMM d, yyyy")</span>
+        </div>
+    </div>
+
+    <h3 class="article-title">@Article.Title</h3>
+    <p class="article-excerpt">@(GetExcerpt())</p>
+
+    <div class="article-footer" aria-hidden="true">
+        <span class="article-read">Read article →</span>
+    </div>
+</a>
+
+@code {
+    [Parameter, EditorRequired]
+    public BlazorFrontEnd.Models.Article Article { get; set; } = default!;
+
+    [Parameter]
+    public int MaxExcerptLength { get; set; } = 150;
+
+    private string GetExcerpt()
+    {
+        if (string.IsNullOrWhiteSpace(Article.ContentHtml))
+            return "No preview available.";
+
+        // Strip HTML tags for plain-text preview
+        var plain = System.Text.RegularExpressions.Regex.Replace(Article.ContentHtml, "<.*?>", "").Trim();
+
+        if (string.IsNullOrEmpty(plain))
+            return "No preview available.";
+
+        return plain.Length > MaxExcerptLength
+            ? plain[..MaxExcerptLength].TrimEnd() + "…"
+            : plain;
+    }
+}

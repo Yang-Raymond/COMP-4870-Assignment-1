@@ -1,0 +1,72 @@
+@page "/articles/{Id:int}"
+@rendermode InteractiveServer
+@inject IHttpClientFactory HttpClientFactory
+
+<PageTitle>@(article?.Title ?? "Article") – Mini-CMS</PageTitle>
+
+@if (loading)
+{
+    <div class="text-center text-muted" style="padding:2rem">Loading article...</div>
+}
+else if (!string.IsNullOrEmpty(error))
+{
+    <div class="text-center text-red-600" style="padding:2rem">Error: @error</div>
+}
+else if (article is null)
+{
+    <div class="text-center text-muted" style="padding:2rem">Article not found.</div>
+}
+else
+{
+    <article class="article-detail">
+        <div class="flex justify-between items-center mb-8">
+            <a href="/articles" class="btn-ghost">← Back to articles</a>
+        </div>
+
+        <header class="article-detail-header">
+            <h1 class="text-4xl font-bold tracking-tight leading-tight" style="margin-bottom:1rem">
+                @article.Title
+            </h1>
+
+            <div class="flex items-center text-sm text-muted">
+                <span class="font-semibold" style="color:var(--text)">
+                    @(string.IsNullOrEmpty(article.AuthorName) ? "Anonymous" : article.AuthorName)
+                </span>
+                <span style="margin:0 .5rem">•</span>
+                <time datetime="@article.CreatedAtUtc.ToString("o")">
+                    @article.CreatedAtUtc.ToLocalTime().ToString("MMMM d, yyyy")
+                </time>
+            </div>
+        </header>
+
+        <div class="rich-text-content leading-relaxed text-lg space-y-4">
+            @((MarkupString)article.ContentHtml)
+        </div>
+    </article>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private BlazorFrontEnd.Models.Article? article;
+    private bool loading = true;
+    private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var client = HttpClientFactory.CreateClient("CmsApi");
+            article = await client.GetFromJsonAsync<BlazorFrontEnd.Models.Article>($"/api/articles/{Id}");
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}

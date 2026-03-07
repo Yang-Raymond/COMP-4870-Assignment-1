@@ -6,6 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddHttpClient("CmsApi", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5002");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
