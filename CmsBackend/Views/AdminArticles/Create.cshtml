@@ -12,7 +12,7 @@
             <hr />
 
             <form method="post" asp-action="Create" asp-controller="AdminArticles">
-                <input type="hidden" asp-for="AuthorName" value="admin" />
+                <input type="hidden" asp-for="AuthorId" value="" />
                 
                 <div class="form-group mb-3">
                     <label asp-for="Title" class="form-label">Article Title</label>
@@ -30,7 +30,7 @@
 
                 <div class="form-group mt-3">
                     <button type="submit" class="btn btn-primary">Create Article</button>
-                    <a href="@Url.Action("Index", "AdminArticles")" class="btn btn-secondary">Cancel</a>
+                    <a asp-controller="AdminArticles" asp-action="Index" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

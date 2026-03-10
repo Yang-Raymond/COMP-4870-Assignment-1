@@ -1,5 +1,6 @@
 using CmsBackend.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CmsBackend.Data;
 
@@ -34,37 +35,37 @@ public static class DbSeeder
                 {
                     Title = "Welcome",
                     ContentHtml = "<p>Seeded article 1.</p>",
-                    AuthorName = "admin",
+                    AuthorId = admin.Id,
                 },
                 new Article
                 {
                     Title = "About",
                     ContentHtml = "<p>Seeded article 2.</p>",
-                    AuthorName = "admin",
+                    AuthorId = admin.Id,
                 },
                 new Article
                 {
                     Title = "FAQ",
                     ContentHtml = "<p>Seeded article 3.</p>",
-                    AuthorName = "admin",
+                    AuthorId = admin.Id,
                 },
                 new Article
                 {
                     Title = "News",
                     ContentHtml = "<p>Seeded article 4.</p>",
-                    AuthorName = "admin",
+                    AuthorId = admin.Id,
                 },
                 new Article
                 {
                     Title = "Getting Started",
                     ContentHtml = "<p>Seeded article 5.</p>",
-                    AuthorName = "admin",
+                    AuthorId = admin.Id,
                 },
                 new Article
                 {
                     Title = "Contact",
                     ContentHtml = "<p>Seeded article 6.</p>",
-                    AuthorName = "admin",
+                    AuthorId = admin.Id,
                 }
             );
             await db.SaveChangesAsync();

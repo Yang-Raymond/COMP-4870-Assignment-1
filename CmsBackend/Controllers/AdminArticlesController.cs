@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CmsBackend.Data;
 using CmsBackend.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -6,43 +7,53 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CmsBackend.Controllers;
 
-// Handles admin CRUD operations for articles with role-based authorization.
 [Authorize]
-[Route("admin")]
+[Route("Admin/Articles")]
 public class AdminArticlesController : Controller
 {
     private readonly ApplicationDbContext _db;
 
     public AdminArticlesController(ApplicationDbContext db) => _db = db;
 
-    // Fetch and display all articles sorted by most recent first.
-    [HttpGet("")]
-    [HttpGet("articles")]
+    [HttpGet]
+    [Route("")]
+    [Route("Index")]
     public async Task<IActionResult> Index()
     {
-        var articles = await _db.Articles.OrderByDescending(a => a.CreatedAtUtc).ToListAsync();
+        var articles = await _db.Articles
+            .Include(a => a.Author)
+            .OrderByDescending(a => a.CreatedAtUtc)
+            .ToListAsync();
+            
         return View(articles);
     }
 
-    // Display the article creation form.
-    [HttpGet("create")]
+    [HttpGet]
+    [Route("Create")]
     public IActionResult Create()
     {
         return View();
     }
 
-    // Create a new article and save to database.
-    [HttpPost("create")]
+    [HttpPost]
+    [Route("Create")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Article article)
     {
-        // Return form if validation fails.
+        // 1. Manually assign the AuthorId FIRST
+        article.AuthorId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+
+        // 2. Clear the validation errors for fields we manage automatically
+        ModelState.Remove(nameof(article.AuthorId));
+        ModelState.Remove(nameof(article.Author));
+
+        // 3. NOW check if the rest of the form (Title, Content) is valid
         if (!ModelState.IsValid)
             return View(article);
 
         article.Id = 0;
         article.CreatedAtUtc = DateTime.UtcNow;
         article.UpdatedAtUtc = DateTime.UtcNow;
-        article.AuthorName = User.Identity?.Name ?? "Unknown";
 
         _db.Articles.Add(article);
         await _db.SaveChangesAsync();
@@ -50,38 +61,36 @@ public class AdminArticlesController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // Display the article edit form.
-    [HttpGet("edit/{id:int}")]
+    [HttpGet]
+    [Route("Edit/{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
         var article = await _db.Articles.FindAsync(id);
-        // Return 404 if article doesn't exist.
         if (article is null)
             return NotFound();
 
         return View(article);
     }
 
-    // Update an existing article with new data.
-    [HttpPost("edit/{id:int}")]
+    [HttpPost]
+    [Route("Edit/{id:int}")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Article article)
     {
-        // Verify the ID matches the article being updated.
         if (id != article.Id)
             return BadRequest();
 
-        // Return form if validation fails.
         if (!ModelState.IsValid)
             return View(article);
 
         var existing = await _db.Articles.FindAsync(id);
-        // Return 404 if article doesn't exist.
         if (existing is null)
             return NotFound();
 
         existing.Title = article.Title;
         existing.ContentHtml = article.ContentHtml;
         existing.UpdatedAtUtc = DateTime.UtcNow;
+        existing.AuthorId = article.AuthorId;
 
         _db.Articles.Update(existing);
         await _db.SaveChangesAsync();
@@ -89,12 +98,12 @@ public class AdminArticlesController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // Delete an article from the database.
-    [HttpPost("delete/{id:int}")]
+    [HttpPost]
+    [Route("Delete/{id:int}")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
         var article = await _db.Articles.FindAsync(id);
-        // Return 404 if article doesn't exist.
         if (article is null)
             return NotFound();
 
