@@ -4,7 +4,7 @@
     <div class="article-top">
         <div class="article-badge">New</div>
         <div class="article-meta">
-            <span>By @Article.AuthorName</span>
+            <span>By @(string.IsNullOrEmpty(Article.AuthorId) ? "Unknown" : Article.AuthorId)</span>
             <span>•</span>
             <span>@Article.CreatedAtUtc.ToString("MMM d, yyyy")</span>
         </div>

@@ -30,7 +30,7 @@ else
 
             <div class="flex items-center text-sm text-muted">
                 <span class="font-semibold" style="color:var(--text)">
-                    @(string.IsNullOrEmpty(article.AuthorName) ? "Anonymous" : article.AuthorName)
+                    @(string.IsNullOrEmpty(article.AuthorId) ? "Anonymous" : $"Author ID: {article.AuthorId}")
                 </span>
                 <span style="margin:0 .5rem">•</span>
                 <time datetime="@article.CreatedAtUtc.ToString("o")">
