@@ -2,13 +2,14 @@ using System.Security.Claims;
 using CmsBackend.Data;
 using CmsBackend.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CmsBackend.Controllers;
 
 [Authorize]
-[Route("Admin/Articles")]
+[Route("Articles")]
 public class AdminArticlesController : Controller
 {
     private readonly ApplicationDbContext _db;
@@ -17,15 +18,31 @@ public class AdminArticlesController : Controller
 
     [HttpGet]
     [Route("")]
-    [Route("Index")]
     public async Task<IActionResult> Index()
     {
-        var articles = await _db.Articles
-            .Include(a => a.Author)
-            .OrderByDescending(a => a.CreatedAtUtc)
-            .ToListAsync();
-            
-        return View(articles);
+        if (User.IsInRole("admin"))
+        {
+            var articles = await _db.Articles
+                .Include(a => a.Author)
+                .OrderByDescending(a => a.CreatedAtUtc)
+                .ToListAsync();
+
+            return View(articles);
+        }
+        else if (User.IsInRole("writer"))
+        {
+            var articles = await _db.Articles
+                .Where(a => a.AuthorId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                .Include(a => a.Author)
+                .OrderByDescending(a => a.CreatedAtUtc)
+                .ToListAsync();
+
+            return View(articles);
+        }
+        else
+        {
+            return Forbid();
+        }
     }
 
     [HttpGet]
@@ -69,6 +86,11 @@ public class AdminArticlesController : Controller
         if (article is null)
             return NotFound();
 
+        if (User.IsInRole("writer"))
+        {
+            if (article.AuthorId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+                return Forbid();
+        }
         return View(article);
     }
 
@@ -79,6 +101,12 @@ public class AdminArticlesController : Controller
     {
         if (id != article.Id)
             return BadRequest();
+
+        if (User.IsInRole("writer"))
+        {
+            if (article.AuthorId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+                return Forbid();
+        }
 
         if (!ModelState.IsValid)
             return View(article);
@@ -106,6 +134,12 @@ public class AdminArticlesController : Controller
         var article = await _db.Articles.FindAsync(id);
         if (article is null)
             return NotFound();
+
+        if (User.IsInRole("writer"))
+        {
+            if (article.AuthorId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+                return Forbid();
+        }
 
         _db.Articles.Remove(article);
         await _db.SaveChangesAsync();
