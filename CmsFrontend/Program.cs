@@ -1,4 +1,4 @@
-using BlazorFrontEnd.Components;
+using CmsFrontend.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 

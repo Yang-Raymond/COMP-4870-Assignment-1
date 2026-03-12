@@ -1,6 +1,7 @@
 using CmsBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace CmsBackend.Data;
 
@@ -10,65 +11,86 @@ public static class DbSeeder
     {
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        await db.Database.MigrateAsync();
+
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-        var adminUserName = "admin";
-        var adminEmail = "a@a.a";
-        var adminPassword = "P@$$w0rd";
-
-        var admin = await userManager.FindByEmailAsync(adminEmail);
-        if (admin == null)
+        // 1. Create User Groups (Roles)
+        string[] roleNames = { "admin", "writer" };
+        foreach (var roleName in roleNames)
         {
-            admin = new IdentityUser
+            if (!await roleManager.RoleExistsAsync(roleName))
             {
-                UserName = adminUserName,
-                Email = adminEmail,
-                EmailConfirmed = true,
-            };
-            await userManager.CreateAsync(admin, adminPassword);
+                await roleManager.CreateAsync(new IdentityRole(roleName));
+            }
         }
 
+        // 2. Seed Users
+        var admin = await EnsureUserAsync(userManager, "a@a.a", "P@$$w0rd", "admin");
+        var writer1 = await EnsureUserAsync(userManager, "w@w.w", "P@$$w0rd", "writer");
+        var writer2 = await EnsureUserAsync(userManager, "x@x.x", "P@$$w0rd", "writer");
+
+        // 3. Seed Articles
         if (!db.Articles.Any())
         {
             db.Articles.AddRange(
                 new Article
                 {
-                    Title = "Welcome",
-                    ContentHtml = "<p>Seeded article 1.</p>",
-                    AuthorId = admin.Id,
+                    Title = "Welcome to Mini-CMS",
+                    ContentHtml = "<p>This is the first seeded article.</p>",
+                    AuthorId = admin.Id
                 },
                 new Article
                 {
-                    Title = "About",
-                    ContentHtml = "<p>Seeded article 2.</p>",
-                    AuthorId = admin.Id,
+                    Title = "Admin Guidelines",
+                    ContentHtml = "<p>Rules for managing the CMS.</p>",
+                    AuthorId = admin.Id
                 },
                 new Article
                 {
-                    Title = "FAQ",
-                    ContentHtml = "<p>Seeded article 3.</p>",
-                    AuthorId = admin.Id,
+                    Title = "Writer Tips",
+                    ContentHtml = "<p>How to format your articles effectively.</p>",
+                    AuthorId = writer1.Id
                 },
                 new Article
                 {
-                    Title = "News",
-                    ContentHtml = "<p>Seeded article 4.</p>",
-                    AuthorId = admin.Id,
+                    Title = "News Update",
+                    ContentHtml = "<p>Latest news from the team.</p>",
+                    AuthorId = writer1.Id
                 },
                 new Article
                 {
                     Title = "Getting Started",
-                    ContentHtml = "<p>Seeded article 5.</p>",
-                    AuthorId = admin.Id,
+                    ContentHtml = "<p>A quick start guide for new users.</p>",
+                    AuthorId = writer2.Id
                 },
                 new Article
                 {
-                    Title = "Contact",
-                    ContentHtml = "<p>Seeded article 6.</p>",
-                    AuthorId = admin.Id,
+                    Title = "Contact Us",
+                    ContentHtml = "<p>Reach out to us for support.</p>",
+                    AuthorId = writer2.Id
                 }
             );
             await db.SaveChangesAsync();
         }
+    }
+
+    private static async Task<IdentityUser> EnsureUserAsync(UserManager<IdentityUser> userManager, string email, string password, string role)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            user = new IdentityUser 
+            { 
+                UserName = email, 
+                Email = email, 
+                EmailConfirmed = true 
+            };
+            await userManager.CreateAsync(user, password);
+            await userManager.AddToRoleAsync(user, role);
+        }
+        return user;
     }
 }
