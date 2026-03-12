@@ -13,6 +13,11 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
     // Display 404 page for unmatched routes.
     public IActionResult NotFound404()
     {
