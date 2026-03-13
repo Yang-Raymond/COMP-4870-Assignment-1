@@ -4,7 +4,7 @@
     <div class="article-top">
         <div class="article-badge">New</div>
         <div class="article-meta">
-            <span>By @(string.IsNullOrEmpty(Article.AuthorId) ? "Unknown" : Article.AuthorId)</span>
+            <span>By @(GetAuthorDisplayName())</span>
             <span>•</span>
             <span>@Article.CreatedAtUtc.ToString("MMM d, yyyy")</span>
         </div>
@@ -39,5 +39,16 @@
         return plain.Length > MaxExcerptLength
             ? plain[..MaxExcerptLength].TrimEnd() + "…"
             : plain;
+    }
+
+    private string GetAuthorDisplayName()
+    {
+        if (!string.IsNullOrWhiteSpace(Article.AuthorName))
+            return Article.AuthorName;
+
+        if (!string.IsNullOrWhiteSpace(Article.AuthorId))
+            return Article.AuthorId;
+
+        return "Unknown";
     }
 }

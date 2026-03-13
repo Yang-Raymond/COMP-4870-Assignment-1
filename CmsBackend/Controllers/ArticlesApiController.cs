@@ -21,14 +21,52 @@ public class ArticlesApiController : ControllerBase
         _userManager = userManager;
     }
 
+    public sealed class ArticleResponse
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string ContentHtml { get; set; } = string.Empty;
+        public string AuthorId { get; set; } = string.Empty;
+        public string? AuthorName { get; set; }
+        public DateTime CreatedAtUtc { get; set; }
+        public DateTime UpdatedAtUtc { get; set; }
+    }
+
     [HttpGet]
-    public async Task<List<Article>> GetAll()
-        => await _db.Articles.OrderByDescending(a => a.CreatedAtUtc).ToListAsync();
+    public async Task<List<ArticleResponse>> GetAll()
+        => await _db.Articles
+            .Include(a => a.Author)
+            .OrderByDescending(a => a.CreatedAtUtc)
+            .Select(a => new ArticleResponse
+            {
+                Id = a.Id,
+                Title = a.Title,
+                ContentHtml = a.ContentHtml,
+                AuthorId = a.AuthorId,
+                AuthorName = a.Author != null ? a.Author.UserName : null,
+                CreatedAtUtc = a.CreatedAtUtc,
+                UpdatedAtUtc = a.UpdatedAtUtc
+            })
+            .ToListAsync();
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Article>> GetById(int id)
+    public async Task<ActionResult<ArticleResponse>> GetById(int id)
     {
-        var a = await _db.Articles.FindAsync(id);
-        return a is null ? NotFound() : Ok(a);
+        var article = await _db.Articles
+            .Include(a => a.Author)
+            .Where(a => a.Id == id)
+            .Select(a => new ArticleResponse
+            {
+                Id = a.Id,
+                Title = a.Title,
+                ContentHtml = a.ContentHtml,
+                AuthorId = a.AuthorId,
+                AuthorName = a.Author != null ? a.Author.UserName : null,
+                CreatedAtUtc = a.CreatedAtUtc,
+                UpdatedAtUtc = a.UpdatedAtUtc
+            })
+            .FirstOrDefaultAsync();
+
+        return article is null ? NotFound() : Ok(article);
     }
 }

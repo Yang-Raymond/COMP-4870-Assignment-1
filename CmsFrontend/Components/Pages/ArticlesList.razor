@@ -18,7 +18,7 @@
 
         <div class="mt-4">
             <input class="input"
-                   placeholder="Search by title/author ID…"
+                   placeholder="Search by title/author…"
                    @bind="query"
                    @bind:event="oninput" />
         </div>
@@ -46,7 +46,7 @@
                         <div>
                             <h3 class="text-lg font-extrabold" style="margin:0">@a.Title</h3>
                             <div class="text-sm text-muted" style="margin-top:.5rem">
-                                By <span class="font-semibold" style="color:var(--text)">@(string.IsNullOrEmpty(a.AuthorId) ? "unknown" : a.AuthorId)</span>
+                                By <span class="font-semibold" style="color:var(--text)">@GetAuthorDisplayName(a)</span>
                                 • @a.CreatedAtUtc.ToLocalTime().ToString("g")
                             </div>
                         </div>
@@ -69,8 +69,14 @@
             ? articles
             : articles.Where(a =>
                 (a.Title?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (a.AuthorName?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false) ||
                 (a.AuthorId?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)
             ).ToList();
+
+    private static string GetAuthorDisplayName(BlazorFrontEnd.Models.Article article)
+        => !string.IsNullOrWhiteSpace(article.AuthorName)
+            ? article.AuthorName
+            : (!string.IsNullOrWhiteSpace(article.AuthorId) ? article.AuthorId : "unknown");
 
     protected override async Task OnInitializedAsync()
     {

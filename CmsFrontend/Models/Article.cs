@@ -6,6 +6,7 @@ public class Article
     public string Title { get; set; } = string.Empty;
     public string ContentHtml { get; set; } = string.Empty;
     public string AuthorId { get; set; } = string.Empty;
+    public string? AuthorName { get; set; }
     public DateTime CreatedAtUtc { get; set; }
     public DateTime UpdatedAtUtc { get; set; }
 }

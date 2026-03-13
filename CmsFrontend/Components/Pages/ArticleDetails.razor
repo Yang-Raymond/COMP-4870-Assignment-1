@@ -30,7 +30,7 @@ else
 
             <div class="flex items-center text-sm text-muted">
                 <span class="font-semibold" style="color:var(--text)">
-                    @(string.IsNullOrEmpty(article.AuthorId) ? "Anonymous" : $"Author ID: {article.AuthorId}")
+                    @GetAuthorDisplayName(article)
                 </span>
                 <span style="margin:0 .5rem">•</span>
                 <time datetime="@article.CreatedAtUtc.ToString("o")">
@@ -52,6 +52,11 @@ else
     private BlazorFrontEnd.Models.Article? article;
     private bool loading = true;
     private string? error;
+
+    private static string GetAuthorDisplayName(BlazorFrontEnd.Models.Article value)
+        => !string.IsNullOrWhiteSpace(value.AuthorName)
+            ? value.AuthorName
+            : (!string.IsNullOrWhiteSpace(value.AuthorId) ? value.AuthorId : "Anonymous");
 
     protected override async Task OnInitializedAsync()
     {
