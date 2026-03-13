@@ -1,6 +1,10 @@
 @page "/articles/{Id:int}"
 @rendermode InteractiveServer
 @inject IHttpClientFactory HttpClientFactory
+@inject IConfiguration Configuration
+@using System.Threading.Tasks
+@using Google.GenAI
+@using Google.GenAI.Types
 
 <PageTitle>@(article?.Title ?? "Article") – Mini-CMS</PageTitle>
 
@@ -39,6 +43,10 @@ else
             </div>
         </header>
 
+        <div>
+            <p>@summary</p>
+        </div>
+
         <div class="rich-text-content leading-relaxed text-lg space-y-4">
             @((MarkupString)article.ContentHtml)
         </div>
@@ -50,6 +58,7 @@ else
     public int Id { get; set; }
 
     private BlazorFrontEnd.Models.Article? article;
+    private string? summary;
     private bool loading = true;
     private string? error;
 
@@ -64,6 +73,13 @@ else
         {
             var client = HttpClientFactory.CreateClient("CmsApi");
             article = await client.GetFromJsonAsync<BlazorFrontEnd.Models.Article>($"/api/articles/{Id}");
+
+            var apiKey = Configuration["GEMINI_API_KEY"];
+            var geminiClient = new Client(apiKey: apiKey);
+            var response = await geminiClient.Models.GenerateContentAsync(
+              model: "gemini-3-flash-preview", contents: $"Summarize this article: {article.ContentHtml}"
+            );
+            summary = response.Text;
         }
         catch (Exception ex)
         {
