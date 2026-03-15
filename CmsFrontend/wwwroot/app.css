@@ -702,3 +702,74 @@ a:hover {
     font-size: .875rem;
     color: #b91c1c;
 }
+
+/* ===== AI Overview (Article details) ===== */
+.ai-overview-section {
+    margin: 2rem 0 2.25rem;
+}
+
+.ai-overview-top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.ai-overview-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(167, 139, 250, 0.14);
+    border: 1px solid rgba(167, 139, 250, 0.28);
+    color: #8b5cf6;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.ai-overview-button {
+    border: 1px solid rgba(167, 139, 250, 0.24);
+    background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+    color: #1f2340;
+    font-weight: 700;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 0 12px 24px rgba(167, 139, 250, 0.18);
+}
+
+.ai-overview-button:hover {
+    transform: translateY(-1px);
+}
+
+.ai-overview-card {
+    background: #ffffff;
+    border: 1px solid rgba(203, 213, 225, 0.9);
+    border-radius: 1.25rem;
+    padding: 1rem 1.1rem;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.ai-overview-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #7c3aed;
+    margin-bottom: 0.55rem;
+}
+
+.ai-overview-text {
+    margin: 0;
+    color: #334155;
+    line-height: 1.7;
+    font-size: 1rem;
+    white-space: pre-wrap;
+}
+
+.ai-overview-empty {
+    color: #64748b;
+    font-style: italic;
+}

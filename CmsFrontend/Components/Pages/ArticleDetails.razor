@@ -43,8 +43,32 @@ else
             </div>
         </header>
 
-        <div>
-            <p>@summary</p>
+        <div class="ai-overview-section">
+            <div class="ai-overview-top">
+                <span class="ai-overview-pill">AI</span>
+
+                <button class="ai-overview-button" @onclick="ToggleOverview">
+                    @(showOverview ? "Hide AI Overview" : "Show AI Overview")
+                </button>
+            </div>
+
+            @if (showOverview)
+            {
+                <div class="ai-overview-card">
+                    <div class="ai-overview-title">AI Overview</div>
+
+                    @if (!string.IsNullOrWhiteSpace(summary))
+                    {
+                        <p class="ai-overview-text">@summary</p>
+                    }
+                    else
+                    {
+                        <p class="ai-overview-text ai-overview-empty">
+                            No AI overview available yet.
+                        </p>
+                    }
+                </div>
+            }
         </div>
 
         <div class="rich-text-content leading-relaxed text-lg space-y-4">
@@ -61,6 +85,13 @@ else
     private string? summary;
     private bool loading = true;
     private string? error;
+
+    private bool showOverview = false;
+
+    private void ToggleOverview()
+    {
+        showOverview = !showOverview;
+    }
 
     private static string GetAuthorDisplayName(BlazorFrontEnd.Models.Article value)
         => !string.IsNullOrWhiteSpace(value.AuthorName)
