@@ -12,10 +12,6 @@
 {
     <div class="text-center text-muted" style="padding:2rem">Loading article...</div>
 }
-else if (!string.IsNullOrEmpty(error))
-{
-    <div class="text-center text-red-600" style="padding:2rem">Error: @error</div>
-}
 else if (article is null)
 {
     <div class="text-center text-muted" style="padding:2rem">Article not found.</div>
@@ -44,6 +40,10 @@ else
         </header>
 
         <div class="ai-overview-section">
+        @if(!string.IsNullOrEmpty(error)){
+            <div class="error-box mt-6" style="overflow-wrap: break-word;">@error</div>
+        }
+        else{
             <div class="ai-overview-top">
                 <span class="ai-overview-pill">AI</span>
 
@@ -69,6 +69,7 @@ else
                     }
                 </div>
             }
+        }
         </div>
 
         <div class="rich-text-content leading-relaxed text-lg space-y-4">
@@ -106,9 +107,10 @@ else
             article = await client.GetFromJsonAsync<BlazorFrontEnd.Models.Article>($"/api/articles/{Id}");
 
             var apiKey = Configuration["GEMINI_API_KEY"];
+            Console.WriteLine(apiKey);
             var geminiClient = new Client(apiKey: apiKey);
             var response = await geminiClient.Models.GenerateContentAsync(
-              model: "gemini-3-flash-preview", contents: $"Summarize this article: {article.ContentHtml}"
+              model: "gemini-3.1-flash-lite-preview", contents: $"Summarize this article: {article.ContentHtml}"
             );
             summary = response.Text;
         }
