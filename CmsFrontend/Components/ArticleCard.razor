@@ -1,4 +1,3 @@
-@* Reusable article preview card – used on Home and Articles pages *@
 
 <a class="article-card" href="articles/@Article.Id">
     <div class="article-top">
@@ -30,7 +29,6 @@
         if (string.IsNullOrWhiteSpace(Article.ContentHtml))
             return "No preview available.";
 
-        // Strip HTML tags for plain-text preview
         var plain = System.Text.RegularExpressions.Regex.Replace(Article.ContentHtml, "<.*?>", "").Trim();
 
         if (string.IsNullOrEmpty(plain))

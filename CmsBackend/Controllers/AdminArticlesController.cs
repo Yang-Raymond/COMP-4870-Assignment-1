@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CmsBackend.Controllers;
-
+/*
+    This controller handles the admin area for razor pages backend.
+    It allows admins and writers to create, edit, and delete articles.
+*/
 [Authorize]
 [Route("Articles")]
 public class AdminArticlesController : Controller
@@ -15,7 +18,9 @@ public class AdminArticlesController : Controller
     private readonly ApplicationDbContext _db;
 
     public AdminArticlesController(ApplicationDbContext db) => _db = db;
-
+    /*
+        Gets all articles
+    */
     [HttpGet]
     [Route("")]
     public async Task<IActionResult> Index()
@@ -44,27 +49,28 @@ public class AdminArticlesController : Controller
             return Forbid();
         }
     }
-
+    /*
+        Gets the create article page
+    */
     [HttpGet]
     [Route("Create")]
     public IActionResult Create()
     {
         return View();
     }
-
+    /*
+        Creates a new article
+    */
     [HttpPost]
     [Route("Create")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Article article)
     {
-        // 1. Manually assign the AuthorId FIRST
         article.AuthorId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
-        // 2. Clear the validation errors for fields we manage automatically
         ModelState.Remove(nameof(article.AuthorId));
         ModelState.Remove(nameof(article.Author));
 
-        // 3. NOW check if the rest of the form (Title, Content) is valid
         if (!ModelState.IsValid)
             return View(article);
 
@@ -77,7 +83,9 @@ public class AdminArticlesController : Controller
 
         return RedirectToAction(nameof(Index));
     }
-
+    /*
+        Gets the edit article page
+    */
     [HttpGet]
     [Route("Edit/{id:int}")]
     public async Task<IActionResult> Edit(int id)
@@ -93,7 +101,9 @@ public class AdminArticlesController : Controller
         }
         return View(article);
     }
-
+    /*
+        Edits an existing article
+    */
     [HttpPost]
     [Route("Edit/{id:int}")]
     [ValidateAntiForgeryToken]
@@ -125,7 +135,9 @@ public class AdminArticlesController : Controller
 
         return RedirectToAction(nameof(Index));
     }
-
+    /*
+        Deletes an existing article
+    */
     [HttpPost]
     [Route("Delete/{id:int}")]
     [ValidateAntiForgeryToken]

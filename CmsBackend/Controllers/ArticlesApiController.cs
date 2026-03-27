@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CmsBackend.Controllers;
 
+/*
+    This controller handles the API endpoints for public blazor frontend.
+*/
 [ApiController]
 [Route("api/articles")]
 public class ArticlesApiController : ControllerBase
@@ -32,6 +35,9 @@ public class ArticlesApiController : ControllerBase
         public DateTime UpdatedAtUtc { get; set; }
     }
 
+    /*
+        Gets all articles
+    */
     [HttpGet]
     public async Task<List<ArticleResponse>> GetAll()
         => await _db.Articles
@@ -49,6 +55,9 @@ public class ArticlesApiController : ControllerBase
             })
             .ToListAsync();
 
+    /*
+        Gets a specific article by ID
+    */
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ArticleResponse>> GetById(int id)
     {

@@ -17,7 +17,6 @@ public static class DbSeeder
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-        // 1. Create User Groups (Roles)
         string[] roleNames = { "admin", "writer" };
         foreach (var roleName in roleNames)
         {
@@ -27,12 +26,10 @@ public static class DbSeeder
             }
         }
 
-        // 2. Seed Users
         var admin = await EnsureUserAsync(userManager, "a@a.a", "P@$$w0rd", "admin");
         var writer1 = await EnsureUserAsync(userManager, "w@w.w", "P@$$w0rd", "writer");
         var writer2 = await EnsureUserAsync(userManager, "x@x.x", "P@$$w0rd", "writer");
-
-        // 3. Seed Articles
+        
         if (!db.Articles.Any())
         {
             db.Articles.AddRange(
